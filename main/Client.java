@@ -19,7 +19,7 @@ public class Client {
 	{
 		Client.painter = painter;
 		try {
-			InetSocketAddress addr = new InetSocketAddress("73.194.216.96", 1420);
+			InetSocketAddress addr = new InetSocketAddress("73.194.216.96", 1145);
 			client = SocketChannel.open(addr);
 		} catch(Exception e) {
 			System.out.println("SERVER DOWN"); // display a message explaining that the server is down
