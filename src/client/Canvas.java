@@ -1,37 +1,44 @@
 package client;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.ActionListener;
-
-import java.awt.Container;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
 
 public class Canvas extends JFrame implements  MouseMotionListener, ActionListener
 {
-    private int x=-10, y=-10; //initial x and y locations, paint won't appear
+
+	private static final long serialVersionUID = 1L;
+	private int x=-10, y=-10; //initial x and y locations, paint won't appear
     private Color col = Color.BLACK;
     private boolean checkErase = false;
 
+    private int curr_radius = 255/2;
+    
+    private JSlider slider;
+    
     public Canvas()
     {
         //frame
         setTitle("Painter");
         setSize(800,600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+        
+        
         //panel
         JPanel p = new JPanel();
-        p.setLayout (new GridLayout(6,1));
+        p.setLayout (new GridLayout(8,2));
         JButton red = new JButton("RED");
         red.setBackground(Color.RED);
 
@@ -50,6 +57,10 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
         JButton white = new JButton("ERASER");
         white.setBackground(Color.WHITE);
 
+        //Slider
+        slider = new JSlider(JSlider.VERTICAL, 1, 255, 255/2);
+        p.add(slider);
+        
         //adds the buttons to paint
         p.add(red);
         p.add(green);
@@ -57,7 +68,10 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
         p.add(yellow);
         p.add(black);
         p.add(white);
+        
 
+ 
+        
         //button triggers
         red.addActionListener(this);
         green.addActionListener(this);
@@ -76,6 +90,8 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
 
         c.addMouseMotionListener(this);
         setVisible(true);
+        
+        repaint();
     }
 
     public void actionPerformed(ActionEvent e)
@@ -114,21 +130,18 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     {
         x = e.getX(); y= e.getY();
         repaint();
-        if(!checkErase) {
-        	Client.sendCircle(x, y+25, 10, col);
-        }else {
-        	Client.sendEraser(x, y+25, 10);
-        }
+        Client.sendCircle(x, y+25, curr_radius, col);
     }
 
     public void paint(Graphics g)
     {
+    	curr_radius = slider.getValue();
     	if(checkErase == false) {
     		g.setColor(col);
-        	g.fillOval(x,y+25,10,10);
+        	g.fillOval(x,y+25,curr_radius,curr_radius);
     	}
     	else {
-    		g.clearRect(x,y+25,10,10);
+    		g.clearRect(x,y+25,curr_radius,curr_radius);
     	}
     	if(revertOld) {
     		revertOld = false;
@@ -137,6 +150,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     		this.col = this.oldCol;
     		this.checkErase = this.oldCheckErase;
     	}
+    
     }
     
     int oldX;
@@ -144,6 +158,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     Color oldCol;
     boolean oldCheckErase;
     boolean revertOld = false;
+    
     public void drawCircle(int x, int y, int radius, Color col) {
     	System.out.println("got circle from server");
     	this.oldX = this.x;
@@ -156,21 +171,6 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     	this.y = y;
     	this.col = col;
     	this.checkErase = false;
-    	
-    	repaint();
-    }
-    
-    public void drawErase(int x, int y, int length){
-    	System.out.println("got erase from server");
-    	this.oldX = this.x;
-    	this.oldY = this.y;
-    	this.oldCol = this.col;
-    	this.oldCheckErase = this.checkErase;
-    	this.revertOld = true;
-    	
-    	this.x = x;
-    	this.y = y;
-    	this.checkErase = true;
     	
     	repaint();
     }
