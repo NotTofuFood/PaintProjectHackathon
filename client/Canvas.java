@@ -109,6 +109,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     public void mouseMoved(MouseEvent e)
     {
     }
+    
     public  void mouseDragged(MouseEvent e)
     {
         x = e.getX(); y= e.getY();
