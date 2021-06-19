@@ -17,10 +17,12 @@ public class Client {
 	// begins the link from client to server
 	public static boolean connect(Canvas canvas)
 	{
+		System.out.println("CONNECTING");
 		Client.canvas= canvas;
 		try {
-			InetSocketAddress addr = new InetSocketAddress("73.194.216.96", 1145);
+			InetSocketAddress addr = new InetSocketAddress("73.194.216.95", 1145);
 			client = SocketChannel.open(addr);
+			System.out.println("CONNECTED");
 		} catch(Exception e) {
 			System.out.println("SERVER DOWN"); // display a message explaining that the server is down
 			e.printStackTrace();
@@ -54,6 +56,8 @@ public class Client {
 								}
 							}
 						}
+					}else {
+						return;
 					}
 						
 				}
@@ -64,6 +68,7 @@ public class Client {
 	}
 	
 	public static void sendCircle(int x, int y, int radius, Color c) {
+		System.out.println("SENDING CIRCLE");
 		send(String.format("CIRCLE %d %d %d %d %d %d", x, y, radius, c.getRed(), c.getGreen(), c.getBlue()));
 	}
 	
@@ -131,6 +136,7 @@ public class Client {
 	
 	public static void disconnect()
 	{
+		System.out.println("DISCONNECTED");
 		try {
 			client.close();
 		} catch (IOException e) {
@@ -143,5 +149,6 @@ public class Client {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		listenerThread = null;
 	}
 }

@@ -2,6 +2,9 @@ package client;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import main.Client;
+
 import javax.swing.JLabel;
 import javax.swing.JButton;
 
@@ -150,6 +153,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     public static void main (String args[])
     {
         Canvas p = new Canvas();
+        Client.connect(p);
     }
 
 
