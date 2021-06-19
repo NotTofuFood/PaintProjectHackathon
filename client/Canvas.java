@@ -160,9 +160,3 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
 
 
 }
-
-
-
-
-
-
