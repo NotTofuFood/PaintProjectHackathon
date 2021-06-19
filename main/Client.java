@@ -40,7 +40,7 @@ public class Client {
 					if(isConnected()) {
 						String input = getInput();
 						if(input != "") {
-							System.out.println("GOT INPUT: " + input);
+							System.out.println("RECIEVED: " + input);
 							//do whatever with the input here
 							String[] args = input.split(" ");
 							if(args[0].equals("CIRCLE")) {
@@ -76,7 +76,6 @@ public class Client {
 	}
 	
 	public static void sendCircle(int x, int y, int radius, Color c) {
-		System.out.println("SENDING CIRCLE");
 		send(String.format("CIRCLE %d %d %d %d %d %d", x, y, radius, c.getRed(), c.getGreen(), c.getBlue()));
 	}
 	
@@ -87,7 +86,7 @@ public class Client {
 	private static String inputBuffer = "";
 	//should ask the server for an input
 	public static String getInput() {
-		ByteBuffer buf = ByteBuffer.allocate(4096); // 4096 is the max length that can be read in one packet, maybe change this later?
+		ByteBuffer buf = ByteBuffer.allocate(40960); // 4096 is the max length that can be read in one packet, maybe change this later?
 		String input;
 		int bytesRead;
 		try {
@@ -119,7 +118,7 @@ public class Client {
 	}
 	
 	public static void send(String s) {
-		System.out.println(s);
+		System.out.println("SENDING: " + s);
 		s = s+'\n'; // so that we know when the string ends
 		byte[] message = new String(s).getBytes();
 		// might be able to input string directly but idk lol
