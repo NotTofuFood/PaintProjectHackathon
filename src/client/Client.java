@@ -16,6 +16,8 @@ public class Client {
 	static SocketChannel client;
 	static Thread listenerThread;
 	static Canvas canvas;
+	
+	public List<Circle> circles = new ArrayList<>();
 
 	// begins the link from client to server
 	public static boolean connect(Canvas canvas)
@@ -99,6 +101,10 @@ public class Client {
 	
 	public static void sendCircle(int x, int y, int radius, Color c) {
 		send(String.format("CIRCLE %d %d %d %d %d %d", x, y, radius, c.getRed(), c.getGreen(), c.getBlue()));
+	}
+	
+	public static void sendSize(int size) {
+		send(String.format("CIRCLE %d", size));
 	}
 	
 	public static void sendEraser(int x, int y, int length) {

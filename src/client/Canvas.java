@@ -9,7 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,6 +33,8 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     private int curr_radius = 255/2;
     
     private JSlider slider;
+    
+    public List<Circle> circles = new ArrayList<>();
     
     public Canvas()
     {
@@ -59,7 +67,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
         white.setBackground(Color.WHITE);
 
         //Slider
-        slider = new JSlider(JSlider.VERTICAL, 1, 255, 15);
+        slider = new JSlider(JSlider.VERTICAL, 1, 255, 255/2);
         p.add(slider);
         
         //adds the buttons to paint
@@ -125,29 +133,47 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
 
     public void mouseMoved(MouseEvent e)
     {
+    	
     }
     
     public  void mouseDragged(MouseEvent e)
     {
         x = e.getX(); y= e.getY();
         repaint();
-        Client.sendCircle(x, y+curr_radius, curr_radius, col);
-    }
-
-    public void paint(Graphics g)
-    {
-    	curr_radius = slider.getValue();
+        
     	
     	int center_x = x-curr_radius/4;
     	int center_y = y-curr_radius/4;
     	
+        
+    	circles.add(new Circle(center_x, center_y, curr_radius, col));
+        Client.sendCircle(center_x, center_y, curr_radius, col);
+     
+    }
+
+    public void paint(Graphics g)
+    {
+    	
+    	drawBG(g);
+
+    	for(int i = 0; i < circles.size(); i++) {
+    		g.setColor(circles.get(i).getColor());
+    		g.fillOval(circles.get(i).getX(), circles.get(i).getY(), circles.get(i).getRadius(),circles.get(i).getRadius());
+    	}
+    	
+    	curr_radius = slider.getValue();
+
+    	int center_x = x-curr_radius/4;
+    	int center_y = y-curr_radius/4;
+    	
     	if(checkErase == false) {
-    		g.setColor(col);
-        	g.fillOval(center_x, center_y,curr_radius,curr_radius);
+
     	}
     	else {
     		g.clearRect(center_x, center_y,curr_radius,curr_radius);
     	}
+    
+    	
     	if(revertOld) {
     		revertOld = false;
     		this.x = this.oldX;
@@ -155,7 +181,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     		this.col = this.oldCol;
     		this.checkErase = this.oldCheckErase;
     	}
-    
+    	
     }
     
     int oldX;
@@ -163,6 +189,18 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     Color oldCol;
     boolean oldCheckErase;
     boolean revertOld = false;
+    
+    public void drawBG(Graphics g) {
+    	BufferedImage bg = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
+    	try {
+			bg = ImageIO.read(new File("src/paper.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    	g.drawImage(bg, 0, 0, 800, 600, this);
+    	//repaint();
+    }
     
     public void drawCircle(int x, int y, int radius, Color col) {
     	System.out.println("got circle from server");
@@ -179,7 +217,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     	
     	repaint();
     }
-
+    
     public void drawErase(int x, int y, int length){
     	System.out.println("got erase from server");
     	this.oldX = this.x;
@@ -194,12 +232,13 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
 
     	repaint();
     }
+
     
+
     public static void main (String args[])
     {
         Canvas p = new Canvas();
         Client.connect(p);
-        Client.getCanvas();
     }
 
 
