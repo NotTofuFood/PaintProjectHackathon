@@ -6,6 +6,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 
@@ -38,29 +41,33 @@ public class Client {
 			public void run() { // this will run on a seperate thread and try to get input from the server
 				while(true) {
 					if(isConnected()) {
-						String input = getInput();
-						if(input != "") {
-							System.out.println("RECIEVED: " + input);
-							//do whatever with the input here
-							String[] args = input.split(" ");
-							if(args[0].equals("CIRCLE")) {
-								int x;
-								int y;
-								int radius;
-								Color color;
-								try {
-									x = Integer.parseInt(args[1]);
-									y = Integer.parseInt(args[2]);
-									radius = Integer.parseInt(args[3]);
-									color = new Color(Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6]));
-									SwingUtilities.invokeLater(new Runnable() {
-										@Override
-										public void run() {
-											canvas.drawCircle(x, y, radius, color);
-										}
-									});
-								} catch(Exception e){
-									e.printStackTrace();
+						List<String> inputs = getInput();
+						if(inputs != null) {
+							Iterator<String> i = inputs.iterator();
+							while(i.hasNext()) {
+								String input = i.next();
+								System.out.println("RECIEVED: " + input);
+								//do whatever with the input here
+								String[] args = input.split(" ");
+								if(args[0].equals("CIRCLE")) {
+									int x;
+									int y;
+									int radius;
+									Color color;
+									try {
+										x = Integer.parseInt(args[1]);
+										y = Integer.parseInt(args[2]);
+										radius = Integer.parseInt(args[3]);
+										color = new Color(Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6]));
+										SwingUtilities.invokeLater(new Runnable() {
+											@Override
+											public void run() {
+												canvas.drawCircle(x, y, radius, color);
+											}
+										});
+									} catch(Exception e){
+										e.printStackTrace();
+									}
 								}
 							}
 						}
@@ -85,36 +92,40 @@ public class Client {
 	
 	private static String inputBuffer = "";
 	//should ask the server for an input
-	public static String getInput() {
-		ByteBuffer buf = ByteBuffer.allocate(40960); // 4096 is the max length that can be read in one packet, maybe change this later?
+	public static List<String> getInput() {
+		ByteBuffer buf = ByteBuffer.allocate(4096); // 4096 is the max length that can be read in one packet, maybe change this later?
 		String input;
 		int bytesRead;
 		try {
 			bytesRead = client.read(buf);
 		} catch (IOException e) {
 			e.printStackTrace();
-			return "";
+			return null;
 		}
 		try {
 			input = new String(buf.array(), "UTF-8").substring(0, bytesRead);
 			if(input.equals("")) {
 				//connection closed
 				disconnect();
-				return "";
+				return null;
 			}
 			
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			return "";
+			return null;
 		}
 		inputBuffer += input;
-		int newlineIndex = inputBuffer.indexOf("\n");
-		if(newlineIndex != -1) { // theres a new complete message
-			String output = inputBuffer.substring(0, newlineIndex);
-			inputBuffer = inputBuffer.substring(newlineIndex+1, inputBuffer.length());
-			return output;
+		int newlineIndex = 1;
+		List<String> outputs = new ArrayList<String>();
+		while(newlineIndex != -1) {
+			newlineIndex = inputBuffer.indexOf("\n");
+			if(newlineIndex != -1) { // theres a new complete message
+				String output = inputBuffer.substring(0, newlineIndex);
+				inputBuffer = inputBuffer.substring(newlineIndex+1, inputBuffer.length());
+				outputs.add(output);
+			}
 		}
-		return ""; // we only have an incomplete message, we will get the whole thing later
+		return outputs;
 	}
 	
 	public static void send(String s) {
