@@ -79,23 +79,28 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     public void actionPerformed(ActionEvent e)
     {
         String act = e.getActionCommand();
-        if (act.equals("RED"))
+        if (act.equals("RED")) {
             checkErase = false;
         	col =Color.RED;
-        else if (act.equals("GREEN"))
+        }
+        else if (act.equals("GREEN")) {
             checkErase = false;
         	col =Color.GREEN;
-        else if (act.equals("BLUE"))
+        }
+        else if (act.equals("BLUE")) {
             checkErase = false;
         	col =Color.BLUE;
-        else if (act.equals("YELLOW"))
+        }
+        else if (act.equals("YELLOW")) {
             checkErase = false;
         	col =Color.YELLOW;
-        else if (act.equals("ERASER"))
+        }
+        else if (act.equals("ERASER")) {
             checkErase = true;
-        else
+        }
+        else {
             col =Color.BLACK;
-
+        }
     }
 
 
@@ -115,7 +120,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
         	g.fillOval(x,y,10,10);
     	}
     	else {
-    		g.clearOval(x,y,10,10);
+    		g.clearRect(x,y,10,10);
     	}
     }
 
