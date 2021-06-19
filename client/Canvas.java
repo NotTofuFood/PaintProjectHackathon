@@ -1,3 +1,5 @@
+package client;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -122,6 +124,24 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     	else {
     		g.clearRect(x,y,10,10);
     	}
+    }
+    
+    public void drawCircle(int x, int y, int radius, Color col) {
+    	int oldX = this.x;
+    	this.x = x;
+    	int oldY = this.y;
+    	this.y = y;
+    	Color oldCol = this.col;
+    	this.col = col;
+    	bool oldErase = this.checkErase;
+    	this.checkErase = false;
+    	
+    	repaint();
+    	
+    	this.x = oldX;
+    	this.y = oldY;
+    	this.col = oldCol;
+    	this.checkErase = oldErase;
     }
 
     public static void main (String args[])
