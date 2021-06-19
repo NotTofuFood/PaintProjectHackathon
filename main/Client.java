@@ -67,6 +67,10 @@ public class Client {
 		send(String.format("CIRCLE %d %d %d %d %d %d", x, y, radius, c.getRed(), c.getGreen(), c.getBlue()));
 	}
 	
+	public static void getCanvas() {
+		send("GETCANVAS");
+	}
+	
 	private static String inputBuffer = "";
 	//should ask the server for an input
 	public static String getInput() {
