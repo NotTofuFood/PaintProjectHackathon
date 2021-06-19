@@ -133,7 +133,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     	this.y = y;
     	Color oldCol = this.col;
     	this.col = col;
-    	bool oldErase = this.checkErase;
+    	boolean oldErase = this.checkErase;
     	this.checkErase = false;
     	
     	repaint();
