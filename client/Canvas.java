@@ -2,9 +2,6 @@ package client;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import main.Client;
-
 import javax.swing.JLabel;
 import javax.swing.JButton;
 

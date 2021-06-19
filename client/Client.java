@@ -1,4 +1,4 @@
-package main;
+package client;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -11,8 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
-
-import client.Canvas;
 
 public class Client {
 	static SocketChannel client;
