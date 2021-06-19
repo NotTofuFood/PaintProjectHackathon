@@ -174,21 +174,6 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     	
     	repaint();
     }
-    
-    public void drawErase(int x, int y, int length){
-    	System.out.println("got erase from server");
-    	this.oldX = this.x;
-    	this.oldY = this.y;
-    	this.oldCol = this.col;
-    	this.oldCheckErase = this.checkErase;
-    	this.revertOld = true;
-
-    	this.x = x;
-    	this.y = y;
-    	this.checkErase = true;
-
-    	repaint();
-    }
 
     public static void main (String args[])
     {
