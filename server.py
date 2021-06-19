@@ -3,10 +3,8 @@
 import selectors
 import socket
 import types
-import users
-import rooms
 
-host = "192.168.1.5"
+host = "127.0.0.1"
 port = 1145
 max_packet_size = 4096
 
@@ -22,7 +20,6 @@ sel.register(lsock, selectors.EVENT_READ, data=None)
 def accept_wrapper(sock):
 	conn, addr = sock.accept()  # Should be ready to read
 	print('accepted connection from', addr)
-	sockets.append(sock)
 	conn.setblocking(False)
 	data = types.SimpleNamespace(addr=addr, inb=b'', outb=b'')
 	events = selectors.EVENT_READ | selectors.EVENT_WRITE
@@ -34,17 +31,25 @@ canvas = []
 #returns output
 #if returns None, nothing is sent back
 def handle_request(input, socket):
+	input = input.decode("utf-8")
 	args = input.split(" ")
-	type = input[0]
+	type = args[0]
 	if(type == "CIRCLE"):
 		#send the circle to everyone else
+		print("CIRCLE")
 		for s in sockets:
-			if(s != socket): # dont send it back to yourself
-				s.send(input+"\n")
+			if(s != socket):
+				print("sending a circle")
+				s.send(bytes(input+"\n", "utf-8"))
 		canvas.append(input)
+		return
 	elif(type == "GETCANVAS"):
+		print("GETCANVAS")
 		for c in canvas:
-			socket.send(c+"\n")
+			socket.send(bytes(c+"\n", "utf-8"))
+		return
+	else:
+		print("SOMETHING ELSE: " + type)
 	#if we reached here, the type of the packet was invalid, so send back an error
 	return "ERROR: INVALID PACKET"
 
@@ -60,7 +65,8 @@ def service_connection(key, mask):
 				recv_data = sock.recv(max_packet_size)  # Should be ready to read
 			except:
 				print('connection forcibly closed by', data.addr)
-				sockets.remove(sock)
+				if(sock in sockets):
+					sockets.remove(sock)
 				sel.unregister(sock)
 				sock.close()
 				return
@@ -71,7 +77,8 @@ def service_connection(key, mask):
 						done = True
 			else:
 				print('closing connection to', data.addr)
-				sockets.remove(sock)
+				if(sock in sockets):
+					sockets.remove(sock)
 				sel.unregister(sock)
 				sock.close()
 				return
@@ -79,6 +86,8 @@ def service_connection(key, mask):
 		if data.outb:
 			# send data to client
 			print('got ', repr(data.outb), ' from ', data.addr)
+			if(not key.fileobj in sockets):
+				sockets.append(key.fileobj)
 			output = handle_request(data.outb, key.fileobj)
 			if(output != None):
 				sent = sock.send(bytes(output+"\n", 'utf-8'))  # Should be ready to write

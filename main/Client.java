@@ -7,6 +7,8 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
+import javax.swing.SwingUtilities;
+
 import client.Canvas;
 
 public class Client {
@@ -20,7 +22,7 @@ public class Client {
 		System.out.println("CONNECTING");
 		Client.canvas= canvas;
 		try {
-			InetSocketAddress addr = new InetSocketAddress("73.194.216.95", 1145);
+			InetSocketAddress addr = new InetSocketAddress("127.0.0.1", 1145);
 			client = SocketChannel.open(addr);
 			System.out.println("CONNECTED");
 		} catch(Exception e) {
@@ -38,9 +40,10 @@ public class Client {
 					if(isConnected()) {
 						String input = getInput();
 						if(input != "") {
+							System.out.println("GOT INPUT: " + input);
 							//do whatever with the input here
 							String[] args = input.split(" ");
-							if(args[0] == "CIRCLE") {
+							if(args[0].equals("CIRCLE")) {
 								int x;
 								int y;
 								int radius;
@@ -50,7 +53,12 @@ public class Client {
 									y = Integer.parseInt(args[2]);
 									radius = Integer.parseInt(args[3]);
 									color = new Color(Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6]));
-									canvas.drawCircle(x, y, radius, color);
+									SwingUtilities.invokeLater(new Runnable() {
+										@Override
+										public void run() {
+											canvas.drawCircle(x, y, radius, color);
+										}
+									});
 								} catch(Exception e){
 									e.printStackTrace();
 								}

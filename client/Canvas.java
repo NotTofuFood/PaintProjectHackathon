@@ -118,7 +118,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     {
         x = e.getX(); y= e.getY();
         repaint();
-	Client.sendCircle(x, y, 10, col);
+        Client.sendCircle(x, y, 10, col);
     }
 
     public void paint(Graphics g)
@@ -133,6 +133,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     }
     
     public void drawCircle(int x, int y, int radius, Color col) {
+    	System.out.println("got circle from server");
     	int oldX = this.x;
     	this.x = x;
     	int oldY = this.y;
@@ -154,6 +155,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     {
         Canvas p = new Canvas();
         Client.connect(p);
+        Client.getCanvas();
     }
 
 
