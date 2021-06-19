@@ -25,8 +25,6 @@ def accept_wrapper(sock):
 	events = selectors.EVENT_READ | selectors.EVENT_WRITE
 	sel.register(conn, events, data=data)
 
-canvas = []
-
 #takes the input from client
 #returns output
 #if returns None, nothing is sent back
@@ -34,19 +32,12 @@ def handle_request(input, socket):
 	input = input.decode("utf-8").strip()
 	args = input.split(" ")
 	type = args[0]
-	if(type == "CIRCLE"):
-		#send the circle to everyone else
-		print("CIRCLE")
+	if(type == "CIRCLE" or type == "ERASE"):
+		#send to everyone else
+		print(type)
 		for s in sockets:
 			if(s != socket):
-				print("sending a circle")
 				s.send(bytes(input+"\n", "utf-8"))
-		canvas.append(input)
-		return
-	elif(type == "GETCANVAS"):
-		print("GETCANVAS")
-		for c in canvas:
-			socket.send(bytes(c+"\n", "utf-8"))
 		return
 	else:
 		print("SOMETHING ELSE: " + type)
