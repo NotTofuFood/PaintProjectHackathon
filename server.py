@@ -39,7 +39,8 @@ def handle_request(input, socket):
 	if(type == "CIRCLE"):
 		#send the circle to everyone else
 		for s in sockets:
-			s.send(input+"\n")
+			if(s != socket): # dont send it back to yourself
+				s.send(input+"\n")
 		canvas.append(input)
 	elif(type == "GETCANVAS"):
 		for c in canvas:
