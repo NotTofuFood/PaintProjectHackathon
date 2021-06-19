@@ -59,7 +59,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
         white.setBackground(Color.WHITE);
 
         //Slider
-        slider = new JSlider(JSlider.VERTICAL, 1, 255, 255/2);
+        slider = new JSlider(JSlider.VERTICAL, 1, 255, 15);
         p.add(slider);
         
         //adds the buttons to paint
