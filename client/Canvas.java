@@ -118,17 +118,17 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     {
         x = e.getX(); y= e.getY();
         repaint();
-        Client.sendCircle(x, y, 10, col);
+        Client.sendCircle(x, y+25, 10, col);
     }
 
     public void paint(Graphics g)
     {
     	if(checkErase == false) {
     		g.setColor(col);
-        	g.fillOval(x,y,10,10);
+        	g.fillOval(x,y+25,10,10);
     	}
     	else {
-    		g.clearRect(x,y,10,10);
+    		g.clearRect(x,y+25,10,10);
     	}
     	if(revertOld) {
     		revertOld = false;
