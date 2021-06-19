@@ -31,7 +31,7 @@ canvas = []
 #returns output
 #if returns None, nothing is sent back
 def handle_request(input, socket):
-	input = input.decode("utf-8")
+	input = input.decode("utf-8").strip()
 	args = input.split(" ")
 	type = args[0]
 	if(type == "CIRCLE"):
