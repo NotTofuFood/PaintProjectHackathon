@@ -19,6 +19,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
 {
     private int x=-10, y=-10; //initial x and y locations, paint won't appear
     private Color col = Color.BLACK;
+    private boolean checkErase = false;
     public Canvas()
     {
         //frame
@@ -79,15 +80,19 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     {
         String act = e.getActionCommand();
         if (act.equals("RED"))
-            col =Color.RED;
+            checkErase = false;
+        	col =Color.RED;
         else if (act.equals("GREEN"))
-            col =Color.GREEN;
+            checkErase = false;
+        	col =Color.GREEN;
         else if (act.equals("BLUE"))
-            col =Color.BLUE;
+            checkErase = false;
+        	col =Color.BLUE;
         else if (act.equals("YELLOW"))
-            col =Color.YELLOW;
+            checkErase = false;
+        	col =Color.YELLOW;
         else if (act.equals("ERASER"))
-            col =Color.WHITE;
+            checkErase = true;
         else
             col =Color.BLACK;
 
@@ -105,8 +110,13 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
 
     public void paint(Graphics g)
     {
-        g.setColor(col);
-        g.fillOval(x,y,10,10);
+    	if(checkErase == false) {
+    		g.setColor(col);
+        	g.fillOval(x,y,10,10);
+    	}
+    	else {
+    		g.clearOval(x,y,10,10);
+    	}
     }
 
     public static void main (String args[])
