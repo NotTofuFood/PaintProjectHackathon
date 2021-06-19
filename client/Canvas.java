@@ -19,8 +19,6 @@ import java.awt.Graphics;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
-import main.Client;
-
 public class Canvas extends JFrame implements  MouseMotionListener, ActionListener
 {
     private int x=-10, y=-10; //initial x and y locations, paint won't appear
