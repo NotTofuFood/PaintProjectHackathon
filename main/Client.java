@@ -7,17 +7,17 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import display.Painter;
+import client.Canvas;
 
 public class Client {
 	static SocketChannel client;
 	static Thread listenerThread;
-	static Painter painter;
+	static Canvas canvas;
 
 	// begins the link from client to server
-	public static boolean connect(Painter painter)
+	public static boolean connect(Canvas canvas)
 	{
-		Client.painter = painter;
+		Client.canvas= canvas;
 		try {
 			InetSocketAddress addr = new InetSocketAddress("73.194.216.96", 1145);
 			client = SocketChannel.open(addr);
@@ -48,10 +48,10 @@ public class Client {
 									y = Integer.parseInt(args[2]);
 									radius = Integer.parseInt(args[3]);
 									color = new Color(Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6]));
+									canvas.drawCircle(x, y, radius, color);
 								} catch(Exception e){
 									e.printStackTrace();
 								}
-								painter.paintCircle(x, y, radius, color);
 							}
 						}
 					}
