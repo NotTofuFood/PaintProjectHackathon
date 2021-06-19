@@ -62,6 +62,11 @@ public class Client {
 		listenerThread.start();
 		return true;
 	}
+	
+	public static void sendCircle(int x, int y, int radius, Color c) {
+		send(String.format("CIRCLE %d %d %d %d %d %d", x, y, radius, c.getRed(), c.getGreen(), c.getBlue()));
+	}
+	
 	private static String inputBuffer = "";
 	//should ask the server for an input
 	public static String getInput() {
