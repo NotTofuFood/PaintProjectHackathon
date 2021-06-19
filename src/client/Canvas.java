@@ -15,7 +15,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-//import client.*;
 
 public class Canvas extends JFrame implements  MouseMotionListener, ActionListener
 {
@@ -115,7 +114,11 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     {
         x = e.getX(); y= e.getY();
         repaint();
-        Client.sendCircle(x, y+25, 10, col);
+        if(!checkErase) {
+        	Client.sendCircle(x, y+25, 10, col);
+        }else {
+        	Client.sendEraser(x, y+25, 10);
+        }
     }
 
     public void paint(Graphics g)
@@ -153,6 +156,21 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     	this.y = y;
     	this.col = col;
     	this.checkErase = false;
+    	
+    	repaint();
+    }
+    
+    public void drawErase(int x, int y, int length){
+    	System.out.println("got erase from server");
+    	this.oldX = this.x;
+    	this.oldY = this.y;
+    	this.oldCol = this.col;
+    	this.oldCheckErase = this.checkErase;
+    	this.revertOld = true;
+    	
+    	this.x = x;
+    	this.y = y;
+    	this.checkErase = true;
     	
     	repaint();
     }

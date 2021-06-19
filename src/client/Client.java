@@ -66,6 +66,23 @@ public class Client {
 									} catch(Exception e){
 										e.printStackTrace();
 									}
+								} else if(args[0].equals("ERASE")) {
+									int x;
+									int y;
+									int length;
+									try {
+										x = Integer.parseInt(args[1]);
+										y = Integer.parseInt(args[2]);
+										length = Integer.parseInt(args[3]);
+										SwingUtilities.invokeLater(new Runnable() {
+											@Override
+											public void run() {
+												canvas.drawErase(x, y, length);
+											}
+										});
+									} catch(Exception e){
+										e.printStackTrace();
+									}
 								}
 							}
 						}
@@ -82,6 +99,10 @@ public class Client {
 	
 	public static void sendCircle(int x, int y, int radius, Color c) {
 		send(String.format("CIRCLE %d %d %d %d %d %d", x, y, radius, c.getRed(), c.getGreen(), c.getBlue()));
+	}
+	
+	public static void sendEraser(int x, int y, int length) {
+		send(String.format("ERASE %d %d %d", x, y, length));
 	}
 	
 	public static void getCanvas() {
