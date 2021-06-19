@@ -16,12 +16,14 @@ import java.awt.Graphics;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
+import main.Client;
 
 public class Canvas extends JFrame implements  MouseMotionListener, ActionListener
 {
     private int x=-10, y=-10; //initial x and y locations, paint won't appear
     private Color col = Color.BLACK;
     private boolean checkErase = false;
+
     public Canvas()
     {
         //frame
@@ -113,6 +115,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     {
         x = e.getX(); y= e.getY();
         repaint();
+	Client.sendCircle(x, y, 10, col);
     }
 
     public void paint(Graphics g)
