@@ -20,7 +20,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
 {
 
 	private static final long serialVersionUID = 1L;
-	private int x=-10, y=-10; //initial x and y locations, paint won't appear
+	private int x=-1000, y=-1000; //initial x and y locations, paint won't appear
     private Color col = Color.BLACK;
     private boolean checkErase = false;
 
@@ -34,7 +34,8 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
         setTitle("Painter");
         setSize(800,600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+        setLocationRelativeTo(null);
+        setResizable(false);
         
         //panel
         JPanel p = new JPanel();
@@ -130,18 +131,22 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     {
         x = e.getX(); y= e.getY();
         repaint();
-        Client.sendCircle(x, y+25, curr_radius, col);
+        Client.sendCircle(x, y+curr_radius, curr_radius, col);
     }
 
     public void paint(Graphics g)
     {
     	curr_radius = slider.getValue();
+    	
+    	int center_x = x-curr_radius/4;
+    	int center_y = y-curr_radius/4;
+    	
     	if(checkErase == false) {
     		g.setColor(col);
-        	g.fillOval(x,y+25,curr_radius,curr_radius);
+        	g.fillOval(center_x, center_y,curr_radius,curr_radius);
     	}
     	else {
-    		g.clearRect(x,y+25,curr_radius,curr_radius);
+    		g.clearRect(center_x, center_y,curr_radius,curr_radius);
     	}
     	if(revertOld) {
     		revertOld = false;
