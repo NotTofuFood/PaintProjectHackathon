@@ -29,8 +29,6 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
 	private int x=-1000, y=-1000; //initial x and y locations, paint won't appear
     private Color col = Color.BLACK;
     private boolean checkErase = false;
-
-    private int curr_radius = 255/2;
     
     private JSlider slider;
     
@@ -124,6 +122,7 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
         }
         else {
             col =Color.BLACK;
+            checkErase = false;
         }
     }
 
@@ -138,8 +137,8 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
         x = e.getX(); y= e.getY();
         repaint();
         
-    	
-    	int center_x = x-curr_radius/4;
+    	int curr_radius = getRadius();
+    	int center_x = x+curr_radius/4;
     	int center_y = y-curr_radius/4;
     	
         
@@ -156,38 +155,9 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
     	drawBG(g);
 
     	for(int i = 0; i < circles.size(); i++) {
-    		g.setColor(circles.get(i).getColor());
-    		g.fillOval(circles.get(i).getX(), circles.get(i).getY(), circles.get(i).getRadius(),circles.get(i).getRadius());
+    		circles.get(i).draw(g);
     	}
-    	
-    	curr_radius = slider.getValue();
-
-    	int center_x = x-curr_radius/4;
-    	int center_y = y-curr_radius/4;
-    	
-    	if(checkErase == false) {
-
-    	}
-    	else {
-    		g.clearRect(center_x, center_y,curr_radius,curr_radius);
-    	}
-    
-    	
-    	if(revertOld) {
-    		revertOld = false;
-    		this.x = this.oldX;
-    		this.y = this.oldY;
-    		this.col = this.oldCol;
-    		this.checkErase = this.oldCheckErase;
-    	}
-    	
     }
-    
-    int oldX;
-    int oldY;
-    Color oldCol;
-    boolean oldCheckErase;
-    boolean revertOld = false;
     
     public void drawBG(Graphics g) {
     	BufferedImage bg = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
@@ -203,32 +173,14 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
     
     public void drawCircle(int x, int y, int radius, Color col) {
     	System.out.println("got circle from server");
-    	this.oldX = this.x;
-    	this.oldY = this.y;
-    	this.oldCol = this.col;
-    	this.oldCheckErase = this.checkErase;
-    	this.revertOld = true;
-    	
-    	this.x = x;
-    	this.y = y;
-    	this.col = col;
-    	this.checkErase = false;
-    	
+    	circles.add(new Circle(x, y, radius, col));
     	repaint();
     }
     
     public void drawErase(int x, int y, int length){
     	System.out.println("got erase from server");
-    	this.oldX = this.x;
-    	this.oldY = this.y;
-    	this.oldCol = this.col;
-    	this.oldCheckErase = this.checkErase;
-    	this.revertOld = true;
 
-    	this.x = x;
-    	this.y = y;
-    	this.checkErase = true;
-
+    	circles.add(new Eraser(x, y, length));
     	repaint();
     }
 
@@ -239,6 +191,4 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
         Canvas p = new Canvas();
         Client.connect(p);
     }
-
-
 }
