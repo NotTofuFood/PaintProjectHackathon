@@ -99,6 +99,8 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
         f.setVisible(true);
         f.add(this);
         
+        circles.add(new Eraser(0, 0, 300));
+        
         repaint();
     }
 

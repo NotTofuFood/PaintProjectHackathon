@@ -2,8 +2,8 @@ package client;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 
@@ -19,7 +19,13 @@ public class Eraser extends Circle{
 	public Eraser(int x, int y, int radius) {
 		super(x, y, radius, Color.BLACK);
     	try {
-			bg = ImageIO.read(new File("src/paper.png"));
+			Image img = (ImageIO.read(new File("src/paper.png")).getScaledInstance(800, 600, Image.SCALE_SMOOTH));
+			bg = new BufferedImage(img.getWidth(null), img.getHeight(null),
+			BufferedImage.TYPE_INT_RGB);
+			Graphics g = bg.createGraphics();
+			g.drawImage(img, 0, 0, null);
+			g.dispose();
+
 			width = bg.getWidth();
 			height = bg.getHeight();
 		} catch (IOException e) {
@@ -34,13 +40,10 @@ public class Eraser extends Circle{
 	}
 	
 	public void draw(Graphics g) {
-		int x = clamp(0, width, getX());
-		int y = clamp(0, height, getY());
-
-		int radius = clamp(0, getX() + getRadius(), getRadius());
-		int radius_y = clamp(0, getY() + getRadius(), getRadius());
+		int x = clamp(0, this.width-getRadius(), getX());
+		int y = clamp(0, this.height-getRadius(), getY());
 		
-    	g.drawImage(bg.getSubimage(x, y, radius, radius_y), getX(), getY(), Canvas.io);
+    	g.drawImage(bg.getSubimage(x, y, getRadius(), getRadius()), getX(), getY(), Canvas.io);
 		//g.clearRect(getX(), getY(), getRadius(), getRadius());
 	}
 	
