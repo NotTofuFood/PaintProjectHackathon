@@ -142,8 +142,8 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
         repaint();
         
     	int curr_radius = getRadius();
-    	int center_x = x+curr_radius/4;
-    	int center_y = y-curr_radius/4;
+    	int center_x = x-90-curr_radius/2;
+    	int center_y = y-curr_radius/2;
 
     	if(!checkErase) {
     		circles.add(new Circle(center_x, center_y, getRadius(), col));
@@ -152,7 +152,6 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
     		circles.add(new Eraser(center_x, center_y, getRadius()));
     		Client.sendEraser(center_x, center_y, getRadius());
     	}
-     
     }
 
     public void paintComponent(Graphics g)
@@ -186,8 +185,6 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
     	circles.add(new Eraser(x, y, length));
     	repaint();
     }
-
-    
 
     public static void main (String args[])
     {
