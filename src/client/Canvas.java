@@ -22,7 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
-public class Canvas extends JFrame implements  MouseMotionListener, ActionListener
+public class Canvas extends JPanel implements  MouseMotionListener, ActionListener
 {
 
 	private static final long serialVersionUID = 1L;
@@ -39,11 +39,12 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
     public Canvas()
     {
         //frame
-        setTitle("Painter");
-        setSize(800,600);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setResizable(false);
+    	JFrame f  = new JFrame();
+        f.setTitle("Painter");
+        f.setSize(800,600);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setLocationRelativeTo(null);
+        f.setResizable(false);
         
         //panel
         JPanel p = new JPanel();
@@ -78,9 +79,6 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
         p.add(black);
         p.add(white);
         
-
- 
-        
         //button triggers
         red.addActionListener(this);
         green.addActionListener(this);
@@ -90,15 +88,14 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
         white.addActionListener(this);
 
         JLabel instructions = new JLabel("Drag the mouse to draw",JLabel.RIGHT);
-        Container c =this.getContentPane();
+        Container c =f.getContentPane();
         c.setLayout(new BorderLayout());
 
-        JLabel direc =new JLabel("Drag to draw", JLabel.RIGHT);
-        c.add(direc,BorderLayout.SOUTH);
         c.add(p, BorderLayout.WEST);
 
         c.addMouseMotionListener(this);
-        setVisible(true);
+        f.setVisible(true);
+        f.add(this);
         
         repaint();
     }
@@ -151,8 +148,10 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
      
     }
 
-    public void paint(Graphics g)
+    public void paintComponent(Graphics g)
     {
+    	
+    	System.out.println(3);
     	
     	drawBG(g);
 
