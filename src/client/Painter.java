@@ -20,9 +20,12 @@ public class Painter extends JPanel implements  MouseMotionListener, ActionListe
     private int curr_radius = 255/2;
     
     private JSlider slider;
+    private Canvas main;
     
-    public Painter()
+    public Painter(Canvas main)
     {
+    	this.main = main;
+    	
         addMouseMotionListener(this);
         setVisible(true);
         
@@ -69,7 +72,7 @@ public class Painter extends JPanel implements  MouseMotionListener, ActionListe
 
     public void paint(Graphics g)
     {
-    	curr_radius = slider.getValue();
+    	curr_radius = main.getRadius();
     	
     	int center_x = x-curr_radius/4;
     	int center_y = y-curr_radius/4;

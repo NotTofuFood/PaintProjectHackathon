@@ -35,7 +35,8 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
 	private JSlider slider;
 	
 	public List<Circle> circles = new ArrayList<>();
-
+	private Painter painter;
+	
 	public Canvas()
 	{
 		//frame
@@ -78,9 +79,6 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
 		p.add(black);
 		p.add(white);
 
-
-
-
 		//button triggers
 		red.addActionListener(this);
 		green.addActionListener(this);
@@ -97,7 +95,10 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
 		Container c =this.getContentPane();
 		c.setLayout(new BorderLayout());
 
+		p.setOpaque(false);
 		c.add(p, BorderLayout.WEST);
+		painter = new Painter(this);
+		c.add(painter);
 
 		c.addMouseMotionListener(this);
 
@@ -105,31 +106,13 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
 		repaint();
 	}
 
+	public int getRadius() {
+		return slider.getValue();
+	}
+	
 	public void actionPerformed(ActionEvent e)
 	{
-		String act = e.getActionCommand();
-		if (act.equals("RED")) {
-			checkErase = false;
-			col =Color.RED;
-		}
-		else if (act.equals("GREEN")) {
-			checkErase = false;
-			col =Color.GREEN;
-		}
-		else if (act.equals("BLUE")) {
-			checkErase = false;
-			col =Color.BLUE;
-		}
-		else if (act.equals("YELLOW")) {
-			checkErase = false;
-			col =Color.YELLOW;
-		}
-		else if (act.equals("ERASER")) {
-			checkErase = true;
-		}
-		else {
-			col =Color.BLACK;
-		}
+		painter.actionPerformed(e);
 	}
 
 
@@ -150,8 +133,7 @@ public class Canvas extends JFrame implements  MouseMotionListener, ActionListen
 
 		circles.add(new Circle(center_x, center_y, curr_radius, col));
 
-		//Client.sendCircle(center_x, center_y, curr_radius, col);
-
+		Client.sendCircle(center_x, center_y, curr_radius, col);
 	}
 
 	public void paintComponent(Graphics g)
