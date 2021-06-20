@@ -6,11 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class Painter extends JPanel implements  MouseMotionListener, ActionListener
@@ -19,6 +14,7 @@ public class Painter extends JPanel implements  MouseMotionListener, ActionListe
 	private int x=-1000, y=-1000; //initial x and y locations, paint won't appear
     private Color col = Color.BLACK;
     private boolean checkErase = false;
+    private int curRadius;
     
     private Canvas main;
     
@@ -70,23 +66,25 @@ public class Painter extends JPanel implements  MouseMotionListener, ActionListe
     {
         x = e.getX(); y= e.getY();
         repaint();
-        int curr_radius = main.getRadius();
-        Client.sendCircle(x, y+curr_radius, curr_radius, col);
+        curRadius = main.getRadius();
+        if(!checkErase) {
+        	Client.sendCircle(x, y, curRadius, col);
+        }else {
+        	Client.sendEraser(x, y, curRadius);
+        }
     }
 
     public void paint(Graphics g)
     {
-    	int curr_radius = main.getRadius();
-    	
-    	int center_x = x-curr_radius/4;
-    	int center_y = y-curr_radius/4;
+    	int center_x = x-curRadius/4;
+    	int center_y = y-curRadius/4;
     	
     	if(checkErase == false) {
     		g.setColor(col);
-        	g.fillOval(center_x, center_y,curr_radius,curr_radius);
+        	g.fillOval(center_x, center_y,curRadius,curRadius);
     	}
     	else {
-    		g.clearRect(center_x, center_y,curr_radius,curr_radius);
+    		g.clearRect(center_x, center_y,curRadius,curRadius);
     	}
     	if(revertOld) {
     		revertOld = false;
@@ -94,27 +92,16 @@ public class Painter extends JPanel implements  MouseMotionListener, ActionListe
     		this.y = this.oldY;
     		this.col = this.oldCol;
     		this.checkErase = this.oldCheckErase;
+    		this.curRadius = this.oldRadius;
     	}
     	
     }
-    
-	public void drawBG(Graphics g) {
-		BufferedImage bg = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
-		try {
-			bg = ImageIO.read(new File("src/paper.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		g.drawImage(bg, 0, 0, 800, 600, this);
-		//repaint();
-	}
-
     
     int oldX;
     int oldY;
     Color oldCol;
     boolean oldCheckErase;
+    int oldRadius;
     boolean revertOld = false;
     
     public void drawCircle(int x, int y, int radius, Color col) {
@@ -124,10 +111,12 @@ public class Painter extends JPanel implements  MouseMotionListener, ActionListe
     	this.oldCol = this.col;
     	this.oldCheckErase = this.checkErase;
     	this.revertOld = true;
+    	this.oldRadius = this.curRadius;
     	
     	this.x = x;
     	this.y = y;
     	this.col = col;
+    	this.curRadius = radius;
     	this.checkErase = false;
     	
     	repaint();
@@ -139,10 +128,12 @@ public class Painter extends JPanel implements  MouseMotionListener, ActionListe
     	this.oldY = this.y;
     	this.oldCol = this.col;
     	this.oldCheckErase = this.checkErase;
+    	this.oldRadius = length;
     	this.revertOld = true;
 
     	this.x = x;
     	this.y = y;
+    	this.curRadius = length;
     	this.checkErase = true;
 
     	repaint();
