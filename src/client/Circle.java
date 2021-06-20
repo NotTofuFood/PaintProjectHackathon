@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.Color;
+import java.awt.Graphics;
 
 public class Circle {
 
@@ -47,4 +48,8 @@ public class Circle {
 		this.radius = radius;
 	}
 	
+	public void draw(Graphics g) {
+		g.setColor(getColor());
+		g.fillOval(getX(), getY(), getRadius(), getRadius());
+	}
 }

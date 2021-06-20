@@ -8,6 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,110 +21,181 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
-public class Canvas extends JFrame implements ActionListener
+
+public class Canvas extends JPanel implements  MouseMotionListener, ActionListener
 {
 
 	private static final long serialVersionUID = 1L;
+	private int x=-1000, y=-1000; //initial x and y locations, paint won't appear
+    private Color col = Color.BLACK;
+    private boolean checkErase = false;
+    
+    private JSlider slider;
+    
+    public List<Circle> circles = new ArrayList<>();
+    
+    public static ImageObserver io;
+    
+    public Canvas()
+    {
+    	io = this;
+        //frame
+    	JFrame f  = new JFrame();
+        f.setTitle("Painter");
+        f.setSize(800,600);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setLocationRelativeTo(null);
+        f.setResizable(false);
+        
+        //panel
+        JPanel p = new JPanel();
+        p.setLayout (new GridLayout(8,2));
+        JButton red = new JButton("RED");
+        red.setBackground(Color.RED);
 
-	private JSlider slider;
-	
-	public List<Circle> circles = new ArrayList<>();
-	private Painter painter;
-	
-	public Canvas()
-	{
-		//frame
-		setTitle("Painter");
-		setSize(800,600);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
-		setResizable(false);
+        JButton green = new JButton("GREEN");
+        green.setBackground(Color.GREEN);
 
-		//panel
-		JPanel p = new JPanel();
-		p.setBackground(new Color(51, 25, 64));
-		
-		p.setLayout (new GridLayout(8,2));
-		JButton red = new JButton("RED");
-		red.setBackground(Color.RED);
+        JButton blue = new JButton("BLUE");
+        blue.setBackground(Color.BLUE);
 
-		JButton green = new JButton("GREEN");
-		green.setBackground(Color.GREEN);
+        JButton yellow = new JButton("YELLOW");
+        yellow.setBackground(Color.YELLOW);
 
-		JButton blue = new JButton("BLUE");
-		blue.setBackground(Color.BLUE);
+        JButton black = new JButton("BLACK");
+        black.setBackground(Color.BLACK);
 
-		JButton yellow = new JButton("YELLOW");
-		yellow.setBackground(Color.YELLOW);
+        JButton white = new JButton("ERASER");
+        white.setBackground(Color.WHITE);
 
-		JButton black = new JButton("BLACK");
-		black.setBackground(Color.BLACK);
+        //Slider
+        slider = new JSlider(JSlider.VERTICAL, (int)Math.sqrt(10), (int)Math.sqrt(255), (int)Math.sqrt(20));
+        p.add(slider);
+        
+        //adds the buttons to paint
+        p.add(red);
+        p.add(green);
+        p.add(blue);
+        p.add(yellow);
+        p.add(black);
+        p.add(white);
+        
+        //button triggers
+        red.addActionListener(this);
+        green.addActionListener(this);
+        blue.addActionListener(this);
+        yellow.addActionListener(this);
+        black.addActionListener(this);
+        white.addActionListener(this);
 
-		JButton white = new JButton("ERASER");
-		white.setBackground(Color.WHITE);
+        JLabel instructions = new JLabel("Drag the mouse to draw",JLabel.RIGHT);
+        Container c =f.getContentPane();
+        c.setLayout(new BorderLayout());
 
-		//Slider
-		slider = new JSlider(JSlider.VERTICAL, (int)Math.sqrt(10), (int)Math.sqrt(255), (int)Math.sqrt(20));
-		p.add(slider);
+        c.add(p, BorderLayout.WEST);
 
-		//adds the buttons to paint
-		p.add(red);
-		p.add(green);
-		p.add(blue);
-		p.add(yellow);
-		p.add(black);
-		p.add(white);
+        c.addMouseMotionListener(this);
+        f.setVisible(true);
+        f.add(this);
+        
+        repaint();
+    }
 
-		//button triggers
-		red.addActionListener(this);
-		green.addActionListener(this);
-		blue.addActionListener(this);
-		yellow.addActionListener(this);
-		black.addActionListener(this);
-		white.addActionListener(this);
+    public int getRadius() {
+        return (int)(Math.pow(slider.getValue(), 2));
+    }
+    
+    public void actionPerformed(ActionEvent e)
+    {
+        String act = e.getActionCommand();
+        if (act.equals("RED")) {
+            checkErase = false;
+        	col =Color.RED;
+        }
+        else if (act.equals("GREEN")) {
+            checkErase = false;
+        	col =Color.GREEN;
+        }
+        else if (act.equals("BLUE")) {
+            checkErase = false;
+        	col =Color.BLUE;
+        }
+        else if (act.equals("YELLOW")) {
+            checkErase = false;
+        	col =Color.YELLOW;
+        }
+        else if (act.equals("ERASER")) {
+            checkErase = true;
+        }
+        else {
+            col =Color.BLACK;
+            checkErase = false;
+        }
+    }
 
-		JLabel instructions = new JLabel("Drag the mouse to draw",JLabel.RIGHT);
 
-		JLabel direc =new JLabel("Drag to draw", JLabel.LEFT);
-		direc.setForeground(new Color(12, 202, 152));
-		p.add(direc);
+    public void mouseMoved(MouseEvent e)
+    {
+    	
+    }
+    
+    public  void mouseDragged(MouseEvent e)
+    {
+        x = e.getX(); y= e.getY();
+        repaint();
+        
+    	int curr_radius = getRadius();
+    	int center_x = x-90-curr_radius/2;
+    	int center_y = y-curr_radius/2;
 
-		Container c =this.getContentPane();
-		c.setLayout(new BorderLayout());
+    	if(!checkErase) {
+    		circles.add(new Circle(center_x, center_y, getRadius(), col));
+    		Client.sendCircle(center_x, center_y, getRadius(), col);
+    	} else {
+    		circles.add(new Eraser(center_x, center_y, getRadius()));
+    		Client.sendEraser(center_x, center_y, getRadius());
+    	}
+     
+    }
 
-		p.setOpaque(false);
-		c.add(p, BorderLayout.WEST);
-		
-		//c.add(new Background());
-		
-		painter = new Painter(this);
-		c.add(painter);
-		
-		setVisible(true);
-		repaint();
-	}
+    public void paintComponent(Graphics g)
+    {
+    	drawBG(g);
+    	for(int i = 0; i < circles.size(); i++) {
+    		circles.get(i).draw(g);
+    	}
+    }
+    
+    public void drawBG(Graphics g) {
+    	BufferedImage bg = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
+    	try {
+			bg = ImageIO.read(new File("src/paper.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    	g.drawImage(bg, 0, 0, 800, 600, this);
+    }
+    
+    public void drawCircle(int x, int y, int radius, Color col) {
+    	System.out.println("got circle from server");
+    	circles.add(new Circle(x, y, radius, col));
+    	repaint();
+    }
+    
+    public void drawErase(int x, int y, int length){
+    	System.out.println("got erase from server");
 
-	public int getRadius() {
-		return (int)(Math.pow(slider.getValue(), 2));
-	}
-	
-	public void actionPerformed(ActionEvent e)
-	{
-		painter.actionPerformed(e);
-	}
-	
-	public void drawCircle(int x, int y, int radius, Color col) {
-		painter.drawCircle(x, y, radius, col);
-	}
-	
-	public void drawErase(int x, int y, int length) {
-		painter.drawErase(x, y, length);
-	}
-	
-	public static void main (String args[])
-	{
-		Canvas p = new Canvas();
-		Client.connect(p);
-	}
+    	circles.add(new Eraser(x, y, length));
+    	repaint();
+    }
 
+    
+
+    public static void main (String args[])
+    {
+        Canvas p = new Canvas();
+        Client.connect(p);
+        Client.getCanvas();
+    }
 }
