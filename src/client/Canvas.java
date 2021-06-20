@@ -38,6 +38,8 @@ public class Canvas extends JFrame implements ActionListener
 
 		//panel
 		JPanel p = new JPanel();
+		p.setBackground(new Color(51, 25, 64));
+		
 		p.setLayout (new GridLayout(8,2));
 		JButton red = new JButton("RED");
 		red.setBackground(Color.RED);
@@ -80,6 +82,7 @@ public class Canvas extends JFrame implements ActionListener
 		JLabel instructions = new JLabel("Drag the mouse to draw",JLabel.RIGHT);
 
 		JLabel direc =new JLabel("Drag to draw", JLabel.LEFT);
+		direc.setForeground(new Color(12, 202, 152));
 		p.add(direc);
 
 		Container c =this.getContentPane();
