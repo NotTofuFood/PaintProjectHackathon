@@ -58,6 +58,7 @@ public class Painter extends JPanel implements  MouseMotionListener, ActionListe
         }
         else {
             col =Color.BLACK;
+            checkErase = false;
         }
     }
 
