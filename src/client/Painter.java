@@ -12,7 +12,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
 
 public class Painter extends JPanel implements  MouseMotionListener, ActionListener
 {
@@ -20,10 +19,7 @@ public class Painter extends JPanel implements  MouseMotionListener, ActionListe
 	private int x=-1000, y=-1000; //initial x and y locations, paint won't appear
     private Color col = Color.BLACK;
     private boolean checkErase = false;
-
-    private int curr_radius = 255/2;
     
-    private JSlider slider;
     private Canvas main;
     
     public Painter(Canvas main)
@@ -32,6 +28,8 @@ public class Painter extends JPanel implements  MouseMotionListener, ActionListe
     	
         addMouseMotionListener(this);
         setVisible(true);
+        
+        //setOpaque(false);
         
         repaint();
     }
@@ -71,12 +69,13 @@ public class Painter extends JPanel implements  MouseMotionListener, ActionListe
     {
         x = e.getX(); y= e.getY();
         repaint();
+        int curr_radius = main.getRadius();
         Client.sendCircle(x, y+curr_radius, curr_radius, col);
     }
 
     public void paint(Graphics g)
     {
-    	curr_radius = main.getRadius();
+    	int curr_radius = main.getRadius();
     	
     	int center_x = x-curr_radius/4;
     	int center_y = y-curr_radius/4;
@@ -95,7 +94,7 @@ public class Painter extends JPanel implements  MouseMotionListener, ActionListe
     		this.col = this.oldCol;
     		this.checkErase = this.oldCheckErase;
     	}
-    
+    	
     }
     
 	public void drawBG(Graphics g) {

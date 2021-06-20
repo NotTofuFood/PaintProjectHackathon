@@ -21,11 +21,6 @@ public class Canvas extends JFrame implements ActionListener
 {
 
 	private static final long serialVersionUID = 1L;
-	private int x=-1000, y=-1000; //initial x and y locations, paint won't appear
-	private Color col = Color.BLACK;
-	private boolean checkErase = false;
-
-	private int curr_radius = 255/2;
 
 	private JSlider slider;
 	
@@ -63,7 +58,7 @@ public class Canvas extends JFrame implements ActionListener
 		white.setBackground(Color.WHITE);
 
 		//Slider
-		slider = new JSlider(JSlider.VERTICAL, 1, 255, 255/2);
+		slider = new JSlider(JSlider.VERTICAL, (int)Math.sqrt(10), (int)Math.sqrt(255), (int)Math.sqrt(20));
 		p.add(slider);
 
 		//adds the buttons to paint
@@ -92,15 +87,18 @@ public class Canvas extends JFrame implements ActionListener
 
 		p.setOpaque(false);
 		c.add(p, BorderLayout.WEST);
+		
+		//c.add(new Background());
+		
 		painter = new Painter(this);
 		c.add(painter);
-
+		
 		setVisible(true);
 		repaint();
 	}
 
 	public int getRadius() {
-		return slider.getValue();
+		return (int)(Math.pow(slider.getValue(), 2));
 	}
 	
 	public void actionPerformed(ActionEvent e)
