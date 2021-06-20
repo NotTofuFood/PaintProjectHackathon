@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,8 +35,11 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
     
     public List<Circle> circles = new ArrayList<>();
     
+    public static ImageObserver io;
+    
     public Canvas()
     {
+    	io = this;
         //frame
     	JFrame f  = new JFrame();
         f.setTitle("Painter");
@@ -142,16 +146,17 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
         repaint();
         
     	int curr_radius = getRadius();
-    	int center_x = x-90-curr_radius/2;
-    	int center_y = y-curr_radius/2;
+    	int center_x = x+curr_radius/4;
+    	int center_y = y-curr_radius/4;
 
     	if(!checkErase) {
     		circles.add(new Circle(center_x, center_y, getRadius(), col));
     		Client.sendCircle(center_x, center_y, getRadius(), col);
-    	}else {
+    	} else {
     		circles.add(new Eraser(center_x, center_y, getRadius()));
     		Client.sendEraser(center_x, center_y, getRadius());
     	}
+     
     }
 
     public void paintComponent(Graphics g)
@@ -185,6 +190,8 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
     	circles.add(new Eraser(x, y, length));
     	repaint();
     }
+
+    
 
     public static void main (String args[])
     {
