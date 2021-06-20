@@ -197,5 +197,6 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
     {
         Canvas p = new Canvas();
         Client.connect(p);
+        Client.getCanvas();
     }
 }
