@@ -68,7 +68,7 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
         white.setBackground(Color.WHITE);
 
         //Slider
-        slider = new JSlider(JSlider.VERTICAL, 1, 255, 255/2);
+        slider = new JSlider(JSlider.VERTICAL, (int)Math.sqrt(10), (int)Math.sqrt(255), (int)Math.sqrt(20));
         p.add(slider);
         
         //adds the buttons to paint
@@ -100,6 +100,10 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
         repaint();
     }
 
+    public int getRadius() {
+        return (int)(Math.pow(slider.getValue(), 2));
+    }
+    
     public void actionPerformed(ActionEvent e)
     {
         String act = e.getActionCommand();
@@ -138,29 +142,25 @@ public class Canvas extends JPanel implements  MouseMotionListener, ActionListen
         x = e.getX(); y= e.getY();
         repaint();
         
+        curr_radius = getRadius();
     	
     	int center_x = x-curr_radius/4;
     	int center_y = y-curr_radius/4;
-    	
-        
-    	circles.add(new Circle(center_x, center_y, curr_radius, col));
-        Client.sendCircle(center_x, center_y, curr_radius, col);
+
+    	circles.add(new Circle(center_x, center_y, getRadius(), col));
+       // Client.sendCircle(center_x, center_y, getRadius(), col);
      
     }
 
     public void paintComponent(Graphics g)
     {
     	
-    	System.out.println(3);
-    	
     	drawBG(g);
 
     	for(int i = 0; i < circles.size(); i++) {
     		g.setColor(circles.get(i).getColor());
-    		g.fillOval(circles.get(i).getX(), circles.get(i).getY(), circles.get(i).getRadius(),circles.get(i).getRadius());
+    		g.fillOval(circles.get(i).getX(), circles.get(i).getY(), circles.get(i).getRadius(), circles.get(i).getRadius());
     	}
-    	
-    	curr_radius = slider.getValue();
 
     	int center_x = x-curr_radius/4;
     	int center_y = y-curr_radius/4;
