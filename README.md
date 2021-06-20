@@ -30,3 +30,7 @@ Not everything is uphill when it comes to software development. Patience is a vi
 
 ## What's next for Chalk N Talk
 Voice channels, lobbies, text, menus, saving boards, and much more!  
+
+![alt text](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/001/567/947/datas/original.png)
+
+![alt text](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/001/567/952/datas/original.png)
