@@ -1,3 +1,5 @@
+## This project was created for high tech hacks.
+
 ## Inspiration
 **EMPOWERING THE YOUTH**
 Here at Painter Pals, we believe that the future is in the hands of the youth. By providing young, ambitious students a platform to enhance their learning experience in and out of the classroom, students will truly find the fun in learning. In the midst of a global pandemic, establishing connections between young minds is needed now more than ever.
