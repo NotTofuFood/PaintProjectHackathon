@@ -6,7 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
@@ -93,6 +97,19 @@ public class Painter extends JPanel implements  MouseMotionListener, ActionListe
     	}
     
     }
+    
+	public void drawBG(Graphics g) {
+		BufferedImage bg = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
+		try {
+			bg = ImageIO.read(new File("src/paper.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		g.drawImage(bg, 0, 0, 800, 600, this);
+		//repaint();
+	}
+
     
     int oldX;
     int oldY;
