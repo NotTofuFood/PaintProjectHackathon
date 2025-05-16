@@ -11,16 +11,7 @@ Our Chalk N' Talk online chalkboard establishes a connection to a remote server,
 ## How we built it
 **A PROGRAMMER'S PARADISE**
 We built a server using Python alongside a graphical interface and client using Java Swing.
-With the help of Git, Eclipse, and IntelliJ,  we were able to collaborate on code and build the chalkboard of our dreams! 
-
-## Challenges we ran into
-**A PROGRAMMER'S WORST NIGHTMARE**
-1. One of our programmers operating system wouldn't handle our sick code. 
-2. There were many debates as to how we would design the rendering system we would use to display our epic drawings.
-3. Our schedules caused a handful of issues.
-4. Our buttons were not appearing at the initial launch of the program.
-5. Our eraser caused the most amount of problems. Our eraser draws a specific portion of the background image over what is already there. Capturing the correct portion of the background image gave rise to several issues.
-
+With the help of Git, Eclipse, and IntelliJ,  we were able to collaborate on code and build a muliti-device chalkboard.
 
 ## Accomplishments that we're proud of
 **THE DREAM TEAM**
